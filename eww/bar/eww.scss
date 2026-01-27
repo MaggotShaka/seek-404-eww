@@ -1,0 +1,249 @@
+/* Created by rxyhn | Optimized for seek-404 */
+
+// Global Reset
+* {
+  all: unset;
+}
+
+// Variables de Color (Paleta Tokyo Night para seek-404)
+$background: #1A1B26;
+$foreground: #A9B1D6;
+$black: #24283B;
+$gray: #565F89;
+$red: #F7768E;
+$green: #73DACA;
+$yellow: #E0AF68;
+$blue: #7AA2F7;
+$magenta: #BB9AF7;
+$cyan: #7DCFFF;
+$white: $foreground;
+$rojo: #ff1200;
+$rojoB: #FF0000;
+
+// Contenedor Principal de la Barra
+.eww_bar {
+  background-color: $background;
+  color: $foreground;
+  padding: 4px;
+}
+
+// Launcher
+.launcher_icon {
+  color: $rojo;
+  font-family: "JetBrainsMono Nerd Font"; // Cambiado a Nerd Font por compatibilidad
+  font-size: 27px;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+
+// ESPACIOS DE TRABAJO
+.workspaces {
+  margin-left: 10px;
+  
+  button {
+    padding: 0 5px;
+    min-width: 20px;
+    color: #565f89; /* Inactivo */
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #D70A53;
+    }
+
+    &.active {
+      background-image: linear-gradient(to bottom, #A30000, #750000); 
+      color: #ffffff;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+
+// Widgets de Control (Bat, Wifi, etc)
+.bat, .config-icon, .wifi-icon, .brightness-icon, .limpieza-btn .volume-icon {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 1.2em;
+  padding: 0 10px;
+}
+
+.bat { color: $green; }
+.limpieza-btn { color: $magenta; }
+.brightness-icon { color: $yellow; }
+.volume-icon { color: $blue; }
+.config-icon { color: $green; }
+
+// Sliders (Brillo y Volumen) - Ajustados para Barra Horizontal
+scale trough {
+  all: unset;
+  background-color: $black;
+  border-radius: 10px;
+  min-height: 8px;   // Altura del slider
+  min-width: 60px;  // Ancho del slider
+  margin: 0 5px;
+}
+
+.bribar trough highlight {
+  background-color: $yellow;
+  border-radius: 10px;
+}
+
+.volbar trough highlight {
+  background-color: $blue;
+  border-radius: 10px;
+}
+
+// Reloj
+.time {
+  font-family: "JetBrainsMono Nerd Font";
+  font-weight: bold;
+  font-size: 1.1em;
+  background-color: $black;
+  color: $white;
+  border-radius: 8px;
+  padding: 2px 15px;
+  margin: 5px 0;
+}
+
+.time-sep {
+  color: $gray;
+  padding: 0 2px;
+}
+
+// Power Menu
+.powermenu {
+  background-color: $black;
+  border-radius: 8px;
+  margin: 5px;
+  padding: 0 5px;
+}
+
+.button-off { color: $red; font-size: 1.3em; padding: 0 10px; }
+.button-reb { color: $yellow; padding: 0 5px; }
+.button-quit { color: $magenta; padding: 0 5px; }
+.button-lock { color: $cyan; padding: 0 5px; }
+.button-bspres { color: $green; padding: 0 5px; }
+
+// Calendario Popup
+.cal-box {
+  background-color: $background;
+  color: $foreground;
+  border: 2px solid $black;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+calendar {
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+calendar:selected {
+  color: $blue;
+  font-weight: bold;
+}
+
+calendar.header {
+  color: $magenta;
+}
+
+
+
+/* Contenedor Principal del Dashboard */
+/* Contenedor Principal */
+.dash_container {
+  background-color: #1A1B26; /* Fondo oscuro */
+  border: 2px solid #D70A53;   /* Borde rojo Debian */
+  border-radius: 15px;
+  padding: 20px;
+}
+
+/* Cabecera y Perfil */
+.dash_header {
+  margin-bottom: 20px;
+}
+
+.profile_img {
+  min-width: 60px;
+  min-height: 60px;
+  background-size: cover;
+  border-radius: 100%;
+  margin-right: 15px;
+  border: 2px solid #D70A53;
+}
+
+.welcome {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #D70A53;
+}
+
+.subtext {
+  font-size: 0.9em;
+  color: #A9B1D6;
+}
+
+
+//  Ventana de notificaciones
+.noti-panel-bg {
+  background-color: #12121e;
+  border: 2px solid #8be9fd;
+  border-radius: 12px;
+  min-height: 400px;
+}
+
+.noti-header {
+  color: #8be9fd;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 10px;
+}
+
+.noti-body {
+  color: #ffffff;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.noti-action-bar {
+  padding: 10px;
+}
+
+.noti-action-clean, .noti-action-mute {
+  background-color: $black;
+  color: $white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.noti-action-clean:hover, .noti-action-mute:hover {
+  background-color: #8be9fd;
+  color: $white;
+}
+
+.noti-item {
+  padding: 10px;
+  border-bottom: 1px solid $white;
+}
+
+.noti-icon-lg {
+  font-size: 30px;
+  color: #8be9fd;
+  min-width: 45px;
+}
+
+.noti-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #8be9fd;
+}
+
+.noti-body {
+  font-size: 13px;
+  color: #ffffff;
+}
+

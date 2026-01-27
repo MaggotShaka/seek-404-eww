@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Función para imprimir el workspace actual
+print_ws() {
+    hyprctl activeworkspace -j | jq --unbuffered -r '.id'
+}
+
+# Imprimir el inicial
+print_ws
+
+# Localizar el socket de eventos (socket2)
+# En Debian 13/Sid el socket suele estar en /tmp o $XDG_RUNTIME_DIR
+SOCK="/tmp/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
+[ ! -S "$SOCK" ] && SOCK="${XDG_RUNTIME_DIR}/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
+
+# Escuchar y forzar salida inmediata
+socat -u UNIX-CONNECT:"$SOCK" - | stdbuf -o0 grep --line-buffered "^workspace>>" | while read -r line; do
+    print_ws
+done

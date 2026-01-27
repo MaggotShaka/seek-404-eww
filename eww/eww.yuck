@@ -1,0 +1,10 @@
+;; ARCHIVO: ~/.config/eww/eww.yuck
+
+;; Importar la configuración de la barra
+(include "./bar/eww.yuck")
+
+;; Importar el DashBoard
+(include "./dashboard/eww.yuck")
+
+;; Importar el infopanel
+(include "./infopanel/eww.yuck")

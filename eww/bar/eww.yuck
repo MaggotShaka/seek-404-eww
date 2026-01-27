@@ -1,0 +1,354 @@
+;; Created by rxyhn | Optimized for seek-404
+;; Full Clean Version - No Metadata Tokens
+
+;; Variable de ejecución
+(defvar eww "eww -c $HOME/.config/eww/bar")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                            Variables (Polls)                          ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defpoll battery            :interval "1s" "scripts/battery icon")
+(defpoll battery-cappacity  :interval "1s" "scripts/battery percent")
+(defpoll wifi-icon          :interval "1s" "scripts/wifi icon")
+(defpoll wifi-name          :interval "1s" "scripts/wifi name")
+(defpoll hour               :interval "1s" "date '+%I'")
+(defpoll min                :interval "1s" "date '+%M'")
+(defpoll mer                :interval "1s" "date '+%p'")
+
+;; Variables del Calendario (Corrigiendo el error de scope)
+(defpoll calendar_day       :interval "10h" "date '+%d'")
+(defpoll calendar_month     :interval "10h" "LC_TIME=es_CO.UTF-8 date '+%b'")
+(defpoll calendar_year      :interval "10h" "date '+%Y'")
+
+(defpoll current-brightness :interval "3s" "ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K[0-9]+'")
+(defpoll current-volume :interval "1s" "pamixer --get-volume")
+(defpoll volume-mute :interval "1s" "pamixer --get-mute")
+
+(defpoll noti_count :interval "2s" "scripts/noti_status.sh count")
+(defpoll noti_paused :interval "2s" "scripts/noti_status.sh status")
+(defpoll noti_messages :interval "2s" "~/.config/eww/bar/scripts/get_messages.sh")
+
+(deflisten workspace "scripts/workspace")(deflisten active_ws :initial "1" "~/.config/eww/bar/scripts/get_active_workspace")
+
+(defvar bright false)
+(defvar volum false)
+(defvar power false)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                            Widget Section                             ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defwidget launcher []
+  (box :orientation "h" 
+       :space-evenly "false" 
+       :spacing 0
+    (button :class "launcher_icon" 
+            :onclick "eww open --toggle infopanel" "")))
+
+(defwidget workspaces []
+  (box :class "workspaces" :spacing 5
+    (button :onclick "hyprctl dispatch workspace 1" 
+            :class {active_ws == 1 ? "active" : ""} "1")
+    (button :onclick "hyprctl dispatch workspace 2" 
+            :class {active_ws == 2 ? "active" : ""} "2")
+    (button :onclick "hyprctl dispatch workspace 3" 
+            :class {active_ws == 3 ? "active" : ""} "3")
+    (button :onclick "hyprctl dispatch workspace 4" 
+            :class {active_ws == 4 ? "active" : ""} "4")))
+
+(defwidget bat []
+  (box :orientation "h" 
+       :space-evenly "false"
+    (label :class "bat" 
+           :halign "end" 
+           :text battery 
+           :tooltip "Battery: ${battery-cappacity}%")))
+
+(defwidget wifi []
+  (box :orientation "h" 
+       :tooltip wifi-name
+    (button :onclick "scripts/popup wifi" 
+            :class "wifi-icon" wifi-icon)))
+
+(defwidget limpieza []
+    (button :class "limpieza-btn"
+            :tooltip "Limpiar Sistema"
+            :onclick "kitty --title Terminal-Limpieza -e ~/.config/eww/bar/scripts/limpieza.sh &"
+            "󰃢 ")) ;; Este es el icono de una escoba de Nerd Fonts
+
+(defwidget config_button []
+  (button :class "config-icon" 
+          :onclick "kitty --title 'Configuración de Hyprland' -e nano ~/.config/hypr/hyprland.conf &"
+          "󰒓")
+)
+
+(defwidget bright []
+  (eventbox :onhover "${eww} update bright=true" 
+            :onhoverlost "${eww} update bright=false"
+    (box :orientation "h" 
+         :space-evenly "false" 
+         :spacing 2
+      (revealer :transition "slideright" 
+                :reveal bright 
+                :duration "550ms"
+        (scale :class "bribar" 
+               :value current-brightness
+               :tooltip "Brightness: ${current-brightness}%" 
+               :onchange "ddcutil setvcp 10 {}"
+               :orientation "h" 
+               :max 101 
+               :min 0))
+      (label :class "brightness-icon" :text ""))))
+
+(defwidget volum []
+  (eventbox :onhover "${eww} update volum=true" 
+            :onhoverlost "${eww} update volum=false"
+    (box :orientation "h" 
+         :space-evenly "false" 
+         :spacing "2"
+      (revealer :transition "slideright" 
+                :reveal volum 
+                :duration "550ms"
+        (scale :class "volbar" 
+               :value current-volume 
+               :orientation "h" 
+               :tooltip "Volume: ${current-volume}%" 
+               :max 101 
+               :min 0 
+               :onchange "pamixer --set-volume {}"))
+       (button :onclick "pamixer -t && eww update volume-mute=$(pamixer --get-mute)"
+               :class "volume-icon" 
+               {volume-mute == "true" ? "" : ""}))))
+
+(defwidget control []
+  (box :orientation "h" 
+       :space-evenly false 
+       :class "control"
+    (bat)
+    (limpieza)
+    (config_button)
+    (bright)
+    (volum)))
+
+(defwidget time []
+  (box :orientation "h" 
+       :class "time" 
+       :valign "center"
+       :space-evenly false
+       :spacing 8
+    (button :onclick "scripts/popup calendar" 
+            :class "time-date" 
+            "${calendar_day}-${calendar_month}-${calendar_year}")
+    
+    (button :onclick "scripts/popup calendar" 
+            :class "time-hour" 
+            "${hour}:${min} ${mer}")))
+
+(defwidget power []
+  (eventbox :onhover "${eww} update power=true" 
+            :onhoverlost "${eww} update power=false" 
+    (box :orientation "h" 
+         :space-evenly "false" 
+         :class "powermenu"
+      (revealer :transition "slideright" 
+                :reveal power 
+                :duration "550ms"
+        (box :orientation "h" 
+             :space-evenly "false"
+          ;; RECARGAR HYPRLAND (En lugar de bspc -r)
+          (button :class "button-bspres" :tooltip "Recargar Hyprland" :onclick "hyprctl reload" "")
+          
+          ;; REINICIAR SISTEMA
+          (button :class "button-reb" :tooltip "Reiniciar" :onclick "systemctl reboot" "")
+          
+          ;; CERRAR SESIÓN (En lugar de killall bspwm)
+          (button :class "button-quit" :tooltip "Cerrar Sesión" :onclick "hyprctl dispatch exit" "")
+          
+          ;; BLOQUEAR PANTALLA (Cambiado a hyprlock si lo usas, o mantenemos el tuyo)
+          (button :class "button-lock" :tooltip "Bloquear" :onclick "hyprlock" "")))
+      
+      ;; APAGADO TOTAL
+      (button :class "button-off" :tooltip "Apagar" :onclick "systemctl poweroff" ""))))
+
+
+
+(defwidget noti_box []
+  (box :class "time"
+       :orientation "h"
+       :space-evenly false
+       :spacing 8
+    (button :class "noti-button"
+            :onclick "eww open --toggle notifications_menu"
+            (box :space-evenly false :spacing 5
+              ;; Si está pausado (No molestar), muestra campana tachada, si no, campana normal
+              (label :text {noti_paused == "true" ? "󰂛 " : "󰂚"} :class "noti-icon")
+              ;; Solo muestra el número si es mayor a 0
+              (label :text {noti_count > 0 ? noti_count : ""} :class "noti-count")
+            )
+    )
+  )
+)
+
+(defwindow notifications_menu
+  :monitor 0
+  :stacking "fg"
+  :geometry (geometry :x "10px"      ;; Distancia del borde derecho
+                      :y "50px"      ;; Distancia desde la barra superior
+                      :width "300px" 
+                      :height "450px"
+                      :anchor "top right")
+  (noti_panel)
+)
+
+(defwidget noti_panel []
+  (box :orientation "v"
+       :space-evenly false
+       :class "noti-panel-bg"
+
+    ;; Título o cabecera
+    (label :text "Notificaciones" :class "noti-header")
+
+    ;; Área de mensajes mejorada
+    (scroll :vexpand true :hexpand true :class "noti-scroll"
+      (box :orientation "v" :spacing 10
+        ;; Muestra los mensajes reales
+        (scroll 
+          :vexpand true 
+          :hexpand true 
+          :height 340 
+          :class "noti-scroll" (literal :content {noti_messages})
+        )
+        ;; Solo muestra "No hay" si el contador de verdad es 0
+        (label :text {noti_count == 0 ? "No hay notificaciones" : ""} 
+               :class "noti-empty")
+      )
+    )
+
+    ;; Caja de botones inferiores
+    (box :class "noti-action-bar"
+         :spacing 10
+         :distribute "fill"
+      (button :class "noti-action-clean" 
+              :onclick "dunstctl history-clear && eww update noti_count=0" 
+              "󰎟 Limpiar")
+      (button :class "noti-action-mute" 
+              :onclick "dunstctl set-paused toggle" 
+              "󰂛 Silencio")
+    )
+  )
+)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                          Layout Containers                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defwidget left []
+  (box :orientation "h" 
+       :space-evenly "false" 
+       :halign "start" 
+    (launcher)
+    (workspaces)))
+
+(defwidget center []
+  (box :orientation "h" 
+       :space-evenly "false" 
+       :halign "center"
+       :spacing 5
+    (time)(noti_box)))
+
+(defwidget right []
+  (box :orientation "h" 
+       :space-evenly "false" 
+       :halign "end" 
+       :spacing 10
+    (control)
+    (power)))
+
+(defwidget bar_layout []
+  (box :class "eww_bar" 
+       :orientation "h" 
+    (left)
+    (center)
+    (right)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                          Window Section                               ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defwindow bar
+  :geometry (geometry :x "0%" 
+                      :y "0%" 
+                      :height "45px" 
+                      :width "100%" 
+                      :anchor "top center")
+  :monitor 0
+  :reserve (struts :distance "45px" :side "top")
+  :wm-ignore false
+  :windowtype "dock"
+  :stacking "fg"
+  :exclusive true
+  (bar_layout))
+
+(defwidget cal []
+  (box :class "cal-box" 
+       :orientation "v"
+    (box :class "cal-inner-box"
+      (calendar :class "cal" 
+                :day calendar_day 
+                :month calendar_month 
+                :year calendar_year))))
+
+(defwindow calendar
+  :geometry (geometry :x "0px" 
+                      :y "50px" 
+                      :width "270px" 
+                      :height "60px" 
+                      :anchor "top center")
+  (cal))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                        Ventana del Dashboard                        ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Widget de Información del Sistema
+(defwidget system_info []
+  (box :class "sys_box" :orientation "v" :spacing 10
+    (box :class "cpu_bar" :space-evenly false
+      (label :text " " :class "sys_icon")
+      (scale :min 0 :max 100 :value {EWW_CPU.avg} :active false))
+    (box :class "mem_bar" :space-evenly false
+      (label :text " " :class "sys_icon")
+      (scale :min 0 :max 100 :value {EWW_RAM.used_mem_perc} :active false))))
+
+;; Widget de Ajustes Rápidos
+(defwidget quick_settings []
+  (box :class "settings_box" :spacing 15
+    (button :class "set_btn" :onclick "notify-send 'Modo Noche'" "󰖔")
+    (button :class "set_btn" :onclick "scripts/popup wifi" "󰖩")
+    (button :class "set_btn" :onclick "scripts/popup audio" "󰓃")))
+
+(defwindow dash
+  :geometry (geometry :x "10px" 
+                      :y "55px" ;; Justo debajo de la barra (45px + 10px margen)
+                      :width "350px" 
+                      :height "600px"
+                      :anchor "top left")
+  :monitor 0
+  :stacking "fg"
+  (dash_layout))
+
+;; Layout del Dashboard
+(defwidget dash_layout []
+  (box :class "dash_container" :orientation "v" :space-evenly false
+    (header)
+    (system_info)
+    (quick_settings)))
+
+;; Widget de Cabecera (Personalizable)
+(defwidget header []
+  (box :class "dash_header" :space-evenly false
+    (box :class "profile_img" :style "background-image: url('images/profile.png');")
+    (box :orientation "v" :valign "center"
+      (label :class "welcome" :text "Hola, Shaka")
+      (label :class "subtext" :text "seek-404 | Debian SID"))))

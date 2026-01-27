@@ -1,0 +1,68 @@
+;; Variable para guardar lo que escribes
+(defvar search_query "")
+(defvar search_results "")   ;; El código Yuck generado por el script
+
+(defwindow dashboard
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "700px"
+                      :height "500px"
+                      :anchor "center center")
+  :stacking "fg"
+  :windowtype "dialog"
+  :focusable true
+  :wm-ignore false
+  (dashboard_layout))
+
+;; Widget reutilizable para las apps
+(defwidget app_button [name icon_name command]
+  (button :class "app-card" 
+          :onclick "${command} & eww -c ~/.config/eww/dashboard close dashboard"
+          :width 120
+          :height 120
+    (box :orientation "v" :space-evenly false :valign "center" :halign "center"
+      (image :path "/home/shaka/.config/eww/dashboard/assets/${icon_name}.svg" 
+             :image-width 65 
+             :image-height 65)
+      (label :class "app-name" :text name)
+    )
+  )
+)
+
+;; El Grid organizado
+(defwidget dashboard_layout []
+  (box :class "layout-box" :orientation "v" :space-evenly false
+    ;; Buscador superior
+(box :class "search-container" :halign "center"
+      (input :class "search-input"
+             :width 450 
+             :onchange "~/.config/eww/dashboard/scripts/search.sh {}"
+             :value search_query))
+
+    ;; CONTENIDO DINÁMICO
+    (stack :selected {search_query == "" ? 0 : 1} :transition "crossfade"
+
+    ;; Filas de Apps (Usamos wraps o múltiples cajas si prefieres filas fijas)
+    (box :class "apps-grid" :orientation "v" :space-evenly false :spacing 20
+      
+      ;; Fila 1
+      (box :orientation "h" :space-evenly true
+        (app_button :name "Dibujo" :icon_name "drawing" :command "kolourpaint")
+        (app_button :name "Firefox" :icon_name "firefox-esr" :command "firefox-esr")
+        (app_button :name "Gimp" :icon_name "gimp" :command "gimp")
+        (app_button :name "Terminal" :icon_name "kitty" :command "kitty")
+      )
+
+      ;; Fila 2
+      (box :orientation "h" :space-evenly true
+        (app_button :name "Notas" :icon_name "mousepad" :command "mousepad")
+        (app_button :name "Archivos" :icon_name "nemo" :command "nemo")
+        (app_button :name "Office" :icon_name "onlyoffice" :command "onlyoffice-desktopeditors")
+        (app_button :name "Video" :icon_name "vlc" :command "vlc")
+      )
+;; VISTA 1: Resultados de Búsqueda (Se muestra cuando escribes)
+      (scroll :height 350 (literal :content search_results))
+    ))
+  )
+)

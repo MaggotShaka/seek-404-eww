@@ -1,0 +1,107 @@
+;; Variables de sistema para la Caja 1
+(defpoll username :interval "24h" "whoami")
+(defpoll hostname :interval "24h" "hostname")
+(defpoll distro   :interval "24h" "grep PRETTY_NAME /etc/os-release | cut -d'\"' -f2")
+;; Datos del clima (Cucuta o tu ciudad)
+(defpoll clima-temp :interval "1h" "curl -s 'wttr.in/Cucuta?format=%t' | sed 's/+//'")
+(defpoll clima-icon :interval "1h" "curl -s 'wttr.in/Cucuta?format=%c'")
+(defpoll cpu_uso :interval "2s" "top -bn1 | grep 'Cpu(s)' | awk '{print $2 + $4}'")
+(defpoll ram_uso :interval "2s" "free -m | awk '/Mem:/ { print int($3/$2*100) }'")
+(defpoll temp_cpu :interval "2s" "awk '{print int($1/1000)}' /sys/class/thermal/thermal_zone0/temp")
+
+;; Tiempo y Fecha
+(defpoll hora :interval "1s" "date '+%I:%M %p'")
+(defpoll fecha :interval "1h" "date '+%d-%b-%Y' | tr '[:lower:]' '[:upper:]'")
+
+
+
+(defwindow infopanel
+  :monitor 0
+  :geometry (geometry :x "0%" :y "0%" :width "800px" :height "470px" :anchor "center")
+  :stacking "fg"
+  :namespace "eww-visuals"
+  (infopanel_layout))
+
+(defwidget infopanel_layout []
+  (box :class "main-container" :orientation "h" :space-evenly false :spacing 10
+    
+    ;; COLUMNA IZQUIERDA (Contiene Áreas Roja, Azul y Amarilla)
+    (box :orientation "v" :space-evenly false :spacing 10 :hexpand true
+      
+      ;; FILA SUPERIOR (Roja y Azul)
+      (box :orientation "h" :space-evenly false :spacing 10 :height 180
+        ;; ÁREA ROJA (Caja 1)
+        (box :class "c1" :orientation "v" :space-evenly false :spacing 10
+        ;; Contenedor del Logo con animación
+        (box :class "c1" :orientation "v" :space-evenly false
+         ;; Sección del Logo (Grande y dominante)
+          (box :class "logo-area" :valign "start" :halign "center" :vexpand true
+          (label :class "debian-logo-imponente" :text ""))
+
+          ;; Sección de Datos (Agrupados abajo)
+          (box :class "info-area" :orientation "v" :space-evenly false :valign "end" :vexpand true
+            (label :class "info-user" :text username)
+            (label :class "info-host" :text hostname)
+            (label :class "info-distro" :text distro))))
+        
+        
+        ;; ÁREA AZUL (Cajas 2, 3, 4)
+        (box :orientation "v" :space-evenly false :spacing 10 :hexpand true
+          (box :class "c2" :orientation "v" :space-evenly false :valign "center"
+          ;; Fila Superior: Clima
+          (box :class "clima-row" :orientation "h" :space-evenly false :halign "center" :spacing 10
+            (label :class "clima-icono" :text clima-icon)
+            (label :class "clima-temp" :text clima-temp))
+
+          ;; Fila Inferior: Reloj y Fecha
+          (box :class "reloj-row" :orientation "v" :space-evenly false :halign "center"
+            (label :class "reloj-grande" :text hora)
+            (label :class "fecha-esp" :text fecha))
+          )
+          (box :orientation "h" :space-evenly true :spacing 10 :height 100
+
+;; Caja 3: CPU
+(box :class "c4"
+  (label :class "icono-recurso-cpu" :text " ") ;; Icono de CPU
+  (box :orientation "v" :space-evenly false :valign "center"
+    (label :class "titulo-recurso" :wrap true :text "CPU          " :halign "start")
+    (label :class "valor-CTR" :text "${cpu_uso}%" :halign "start"))
+)
+
+;; Caja 4: TEMPERATURA
+(box :class "c4"
+  (label :class "icono-recurso-ram" :text " ") ;; Icono de RAM
+  (box :orientation "v" :space-evenly false :valign "center"
+    (label :class "titulo-recurso" :text "TEMPERATURA" :halign "start")
+    (label :class "valor-CTR" :text "${temp_cpu}C°" :halign "start"))
+)
+
+;; Caja 4: RAM
+(box :class "c4"
+  (label :class "icono-recurso-ram" :text " ") ;; Icono de RAM
+  (box :orientation "v" :space-evenly false :valign "center"
+    (label :class "titulo-recurso" :text "RAM          " :halign "start")
+    (label :class "valor-CTR" :text "${ram_uso}%" :halign "start"))
+)
+
+
+        )))
+
+      ;; ÁREA AMARILLA (Cajas 5, 6)
+      (box :orientation "h" :space-evenly false :spacing 10 :vexpand true
+        (box :class "c5" :width 100 "5")
+        (box :class "c6" :hexpand true "6")))
+
+    ;; ÁREA VERDE (Cajas 7 a 13)
+    (box :orientation "h" :space-evenly false :spacing 10 :width 280
+      ;; Sub-columna 7 y 9
+      (box :orientation "v" :space-evenly false :spacing 10 :hexpand true
+        (box :class "c7" :height 90 "7")
+        (box :class "c9" :vexpand true "9"))
+      ;; Sub-columna de botones (8, 10, 11, 12, 13)
+      (box :orientation "v" :space-evenly true :spacing 10 :width 90
+        (box :class "c8" "⏻")
+        (box :class "c10" "")
+        (box :class "c11" "󰌾")
+        (box :class "c12" "󰤄")
+        (box :class "c13" "󰍃")))))

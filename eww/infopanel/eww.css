@@ -1,0 +1,122 @@
+/* Fondo 100% invisible */
+.main-container {
+    background-color: rgba(0, 0, 0, 0);
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+/* Las cajas con el gris de Ubuntu */
+.c1, .c2, .c3, .c4, .c5, .c6, .c7, .c8, .c9, .c10, .c11, .c12, .c13 {
+    background-color: #333333;
+    border-radius: 20px;
+    
+    /* El "ancla" para que se vea bien sobre fondo blanco:
+       1. Un borde negro muy fino para definir la silueta.
+       2. Una sombra suave para dar profundidad. */
+    border: 1px solid rgba(0, 0, 0, 0);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0);
+
+    padding: 10px;
+}
+
+/* Texto de prueba */
+label {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 20px;
+}
+
+/* Estilo compatible con GTK */
+.logo-area {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.debian-logo-imponente {
+    font-size: 130px; 
+    color: #FF0000;
+    margin-right: 30px;
+    /* Mantenemos el aura pero con valores seguros */
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.info-area {
+    margin-bottom: 10px;
+    padding-top: 10px;
+    /* Si el border-top da error, lo quitamos, pero debería funcionar */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-user {
+    font-size: 34px;
+    font-weight: 900;
+    color: #cdd6f4; /*blanco pastel*/
+}
+
+.info-host {
+    font-size: 20px;
+    font-weight: 800;
+    color: #A30000; /* Tu rojo de poder */
+    margin-top: -5px;
+}
+
+.info-distro {
+    font-size: 12px;
+    color: #cdd6f4; /*blanco pastel*/
+    margin-top: 8px;
+}
+
+/* Sección Clima */
+/* Caja 2: Clima y Reloj */
+.clima-icono {
+    font-size: 90px;
+    color: #cdd6f4; /* Texto claro */
+    text-shadow: 0 0 10px rgba(196, 126, 183, 0.3);
+}
+
+.clima-temp {
+    font-size: 48px;
+    font-weight: bold;
+    color: #cdd6f4; /* Texto claro */
+}
+
+.reloj-grande {
+    font-size: 68px;
+    font-weight: 900;
+    color: #84afdb; /* Azul */
+}
+
+.fecha-esp {
+    font-size: 17px;
+    font-weight: 800;
+    color: #84afdb; /* Azul */
+    letter-spacing: 1.5px;
+    margin-top: -8px;
+}
+
+/* Caja 3 y 4: Recursos */
+.titulo-recurso {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffd5cd; /*crema*/
+}
+
+.valor-CTR {
+    font-size: 30px;
+    font-weight: 900;
+    color: #D35D6E; /* Rojo Pastel */
+}
+
+/* Estilos para los Iconos */
+.icono-recurso-cpu {
+    font-size: 45px;
+    color: #ffd5cd; /*crema*/
+    text-shadow: 0 0 10px rgba(92, 191, 103, 0.2);
+}
+
+.icono-recurso-ram {
+    font-size: 45px;
+    color: #ffd5cd; /*crema*/
+    text-shadow: 0 0 10px rgba(211, 93, 110, 0.2);
+}
+

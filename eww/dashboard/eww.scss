@@ -1,0 +1,68 @@
+* {
+  all: unset;
+}
+
+.layout-box {
+  background-color: rgba(20, 20, 20, 0.95);
+  border: 2px solid #d70a53;
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.search-input {
+  background-color: #2a2a2a;
+  color: white;
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-card {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  
+  &:hover {
+    background-color: #d70a53;
+  }
+}
+
+.app-icon {
+  font-size: 40px;
+  font-family: "JetBrainsMono Nerd Font"; 
+}
+
+.app-name {
+  font-size: 14px;
+  margin-top: 5px;
+  color: white;
+}
+
+.result-icon {
+  color: #d70a53; 
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 18px;
+}
+
+.search-result-item {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background-color: rgba(42, 42, 42, 0.5);
+  margin: 5px 10px;
+  transition: 150ms;
+
+  &:hover {
+    background-color: #d70a53;
+    color: white;
+
+    .result-icon {
+      color: white;
+    }
+  }
+}
+
+.result-text {
+  font-size: 14px;
+  font-family: "JetBrainsMono Nerd Font";
+  color: white;
+}
