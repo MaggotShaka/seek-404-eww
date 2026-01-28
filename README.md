@@ -1,9 +1,33 @@
-# Seek-404-EWW
-Configuración personal de Debian 14 SID, sin entorno de escritorio y solo con Hyprland y EWW
-Instale Debian 14 SID, sin ningún entorno de escritorio, solo con las herramientas de Debian y SSH.
-Instale Hyprland y dentro instale úncamente EWW (esta es la página para la correcta instalación https://elkowar.github.io/eww/)
-Copiar la carpeta EWW en ~/.config/
-Copiar el archivo Hyprland.conf dentro de ~/.config/hypr/
-Instalar dnust para las notificaciones.
+# 🔍 Seek-404-EWW
+> A collection of minimal, ultra-lightweight EWW widgets designed for performance and aesthetics. 
 
-Esto lo hice de uso personal y está en construcción. cualquier aporte es bienvenido.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.kernel.org)
+[![Tested on](https://img.shields.io/badge/Tested%20on-Pentium%20II-orange.svg)]()
+
+This repository contains my personal EWW (ElKowar's Wacky Widgets) configuration, optimized to run on low-resource hardware without sacrificing a modern look.
+
+---
+
+## 📦 Widgets Incluidos
+
+### 📻 YTMusik
+Un reproductor de audio minimalista que utiliza `mpv` y `yt-dlp`.
+- **Búsqueda directa:** Encuentra cualquier canción escribiendo su nombre.
+- **Soporte de Links:** Pega URLs de YouTube o Mixes directamente.
+- **Control de procesos:** Gestión automática para evitar múltiples instancias de audio.
+- **Atajos:** - `Click Izquierdo`: Abrir buscador.
+  - `Click Derecho`: Detener música (`pkill mpv`).
+
+### 📅 Minimal Bar & Clock
+Barra de estado optimizada con reloj, fecha y centro de notificaciones integrado.
+
+---
+
+## 🛠️ Instalación y Dependencias
+
+Para que todos los scripts y widgets funcionen correctamente (especialmente el audio), instala las siguientes herramientas:
+
+```bash
+# Dependencias principales
+sudo apt update && sudo apt install eww mpv yt-dlp ffmpeg python3 -y
