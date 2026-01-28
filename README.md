@@ -5,7 +5,7 @@
 [![Plataforma](https://img.shields.io/badge/Plataforma-Linux-blue.svg)](https://www.kernel.org)
 [![Probado en](https://img.shields.io/badge/Probado%20en-Pentium%20II-orange.svg)]()
 
-Este repositorio contiene mi configuración personal de EWW (ElKowar's Wacky Widgets), optimizada para funcionar en hardware de bajos recursos sin sacrificar un aspecto moderno. Probado y verificado en **Debian Sid**.
+Este repositorio contiene mi configuración personal de EWW (ElKowar's Wacky Widgets), optimizada para funcionar en hardware de bajos recursos sin sacrificar un aspecto moderno. Probado y verificado en **Debian Sid**. Al realizar la descarga copiar únicamente la carpeta eww(junto con todo lo que está dentro claro) dentro de ~/.config
 
 ---
 
@@ -51,7 +51,7 @@ Los widgets utilizan Nerd Fonts para mostrar los iconos correctamente.
 Instalación del Repositorio
 ### 1. Clonar el repo
 ```bash
-git clone [https://github.com/MaggotShaka/Seek-404-EWW](https://github.com/MaggotShaka/Seek-404-EWW) ~/.config/eww/Seek404
+git clone [https://github.com/MaggotShaka/Seek-404-EWW](https://github.com/MaggotShaka/Seek-404-EWW) ~/.config/eww
 ```
 ### 2. Permisos de Ejecución: Otorga permisos a todos los scripts:
 ```bash
@@ -62,7 +62,7 @@ Configuración de Servicios
 ### 1. Dunst (Notificaciones):
 ```bash
 mkdir -p ~/.config/dunst
-cp ~/.config/eww/Seek404/config/dunstrc ~/.config/dunst/dunstrc
+cp ~/.config/eww/config/dunstrc ~/.config/dunst/dunstrc
 killall dunst; dunst &
 ```
 ### 2. Permisos de Brillo: Añade tu usuario al grupo video para que brightnessctl funcione sin sudo:
