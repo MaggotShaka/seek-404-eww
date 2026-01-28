@@ -8,3 +8,6 @@
 
 ;; Importar el infopanel
 (include "./infopanel/eww.yuck")
+
+;; Importar el YTMusic
+(include "./YTMusik/eww.yuck")
