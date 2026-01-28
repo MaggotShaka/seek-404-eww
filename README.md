@@ -1,4 +1,4 @@
-# 🔍 Seek-404-EWW
+# 🔍 Seek-404-EWW (en construcción)
 > Una colección de widgets para EWW minimalistas y ultra ligeros, diseñados para el rendimiento y la estética.
 
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -81,3 +81,15 @@ sudo usermod -aG video $USER
 Creado por Shaka.
 
 Si este proyecto te ayuda a darle vida a una PC vieja, ¡considera darle una ⭐!
+
+
+<img width="1920" height="47" alt="imagen" src="https://github.com/user-attachments/assets/646c8649-7321-43d6-ab6d-bcb14cfc55e4" />
+
+
+<img width="911" height="979" alt="imagen" src="https://github.com/user-attachments/assets/0edb8a0f-1fbe-4aa0-adce-428d006bf869" />
+
+
+<img width="1348" height="534" alt="imagen" src="https://github.com/user-attachments/assets/058014b4-b53d-4d72-919d-b196313b71f1" />
+
+
+
